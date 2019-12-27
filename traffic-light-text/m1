@@ -1,0 +1,57 @@
+machine M1
+    refines M0
+    sees C1
+variables
+    pedestrians_colour
+    cars_colours
+invariants
+    @inv4
+        pedestrians_colour ∈ COLOURS ∖ {orange}
+    @inv5
+        pedestrians_go = TRUE ⇔ pedestrians_colour = green
+    @inv6
+        cars_colours ⊆ COLOURS
+    @inv7
+        cars_go = TRUE ⇔ green ∈ cars_colours
+    @inv8
+        cars_colours ≠ {green, red}
+    @inv9
+        cars_colours ≠ {green, orange, red}
+    @inv10
+        cars_colours ≠ {green, orange}
+    @inv11
+        cars_colours ≠ ∅
+events
+    event INITIALISATION
+      then
+        @act1 pedestrians_colour ≔ red
+        @act2 cars_colours ≔ {red}
+    end
+
+    event set_pedestrians_green refines pedestrians_go
+      where
+        @grd1 green ∉ cars_colours
+      then
+        @act1 pedestrians_colour ≔ green
+    end
+
+    event set_pedestrians_red refines set_pedestrians_stop
+      then
+        @act1 pedestrians_colour ≔ red
+    end
+
+    event set_cars_colours refines set_cars
+      any
+        new_value_colours
+      where
+        @grd1 new_value_colours ⊆ COLOURS
+        @grd2 green ∈ new_value_colours ⇒ pedestrains_colour = red
+        @grd3 cars_colours = {orange} ⇒ new_value_colours = {red}
+        @grd4 cars_colours = {red} ⇒ new_value_colours = {red, orange}
+        @grd5 cars_colours = {red, orange} ⇒ new_value_colours = {green}
+        @grd6 cars_colours = {green} ⇒ new_value_colours = {orange}
+      with
+        @new_value new_value = TRUE ⇔ green ∈ new_value_colours
+      then
+        @act1 cars_colours ≔ new_value_colours
+    end

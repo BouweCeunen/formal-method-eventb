@@ -1,0 +1,39 @@
+machine M0
+variables
+    cars_go
+    pedestrians_go
+invariants
+    @inv1
+        cars_go ∈ BOOL
+    @inv2
+        pedestrians_go ∈ BOOL
+    @inv3
+        ¬(cars_go = TRUE ∧ pedestrians_go = TRUE)
+events
+    event INITIALISATION
+      then
+        @act1 cars_go ≔ FALSE
+        @act2 pedestrians_go ≔ FALSE
+    end
+    event set_pedestrians_go
+      where
+        @grd1 cars_go = FALSE
+      then
+        @act1 pedestrians_go ≔ TRUE
+    end
+
+    event set_pedestrians_stop
+      then
+        @act1 pedestrians_go ≔ FALSE
+    end
+
+    event set_cars
+      any
+        new_value
+      where
+        @grd1 new_value ∈ BOOL
+        @grd2 new_value = TRUE ⇒ pedestrians_go = FALSE
+      then
+        @act1 cars_go ≔ new_value
+    end
+end

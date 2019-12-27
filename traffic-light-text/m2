@@ -1,0 +1,36 @@
+machine M2
+    refines M1
+    sees C1
+variables
+    pedestrians_colour
+    cars_colours
+    button
+invariants
+    @inv1
+        button ∈ BOOL
+events
+    event INITIALISATION extends INITIALISATION
+      then
+        @act3 button ≔ FALSE
+    end
+
+    event push_button
+      where
+        @grd1 pedestrians_colour = red
+      then
+        @act1 button ≔ TRUE
+    end
+
+    event set_pedestrians_green extends set_pedestrians_green
+    end
+
+    event set_pedestrians_red extends set_pedestrians_red
+      then
+        @act2 button ≔ FALSE
+    end
+
+    event set_cars_colours extends set_cars_colours
+      where
+        @grd7 ¬(cars_colours = {red} ∧ button = TRUE)
+    end
+end

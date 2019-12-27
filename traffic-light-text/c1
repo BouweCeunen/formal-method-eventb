@@ -1,0 +1,11 @@
+context C1
+sets
+    COLOURS
+constants
+    red
+    orange
+    green
+axioms
+    @colours_type
+        partition(COLOURS, {red}, {orange}, {green})
+end
